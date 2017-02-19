@@ -5,14 +5,45 @@ import (
 	"testing"
 )
 
+var sverigeCoords = coords{
+	{
+		"lat": 59.6749712,
+		"lng": 14.5208584,
+	},
+}
+
+var osloCoords = coords{
+	{
+		"lat": 59.6749712,
+		"lng": 14.5208584,
+	},
+}
+
+var sverige = location{
+	"coords":   sverigeCoords,
+	"geo_type": "point",
+	"type":     "inferred point",
+	"weight":   0.5,
+	"label":    "Sverige",
+}
+
+var oslo = location{
+	"coords":   osloCoords,
+	"geo_type": "point",
+	"type":     "inferred point",
+	"weight":   0.8,
+	"label":    "Oslo",
+}
+
 var testEvent = event{
 	ID:                "123",
 	Name:              "name",
-	Keywords:          [][]interface{}{[]interface{}{"attack", 10}, []interface{}{"crisis", 20}},
+	Keywords:          keywordPairs{[]interface{}{"attack", 10.0}, []interface{}{"crisis", 20.0}},
 	Hashtags:          []string{"pakistan", "daesh", "isis"},
 	URLs:              []string{"https://t.co/wi29dkomyd", "https://t.co/njm1iclohh"},
 	ImageURLs:         []string{"https://pbs.twimg.com/media/C4xo5cEWEAAksFH.jpg:large", "https://pbs.twimg.com/media/C4zMvyLUYAAfeZT.jpg:large"},
 	TopicMessageCount: 133,
+	Locations:         locations{sverige, oslo},
 }
 
 func TestToQCR(t *testing.T) {
@@ -28,8 +59,13 @@ func TestToQCR(t *testing.T) {
 		t.Error("should be 'crisis' but was ", k)
 	}
 
-    h := got["hashtags"].([]string)[0]
+	h := got["hashtags"].([]string)[0]
 	if h != "pakistan" {
-		t.Error("should be 'pakistan' but was ", k)
+		t.Error("should be 'pakistan' but was ", h)
+	}
+
+    loc := got["location"].(location)
+    if loc["label"] != "Oslo" {
+		t.Error("should be 'Oslo' but was ", loc["label"])
 	}
 }

@@ -12,6 +12,7 @@ type event struct {
 	ImageURLs []string `json:"image_urls"`
 	Domains []string `json:"domains"`
 	TopicMessageCount int `json:"topic_message_count"`
+    Locations locations `json:"location"`
 }
 
 // sortable pairs: [word string, count int]
@@ -25,7 +26,7 @@ func (kp keywordPairs) Swap(i, j int) {
 }
 func (kp keywordPairs) Less(i, j int) bool {
 	// desc by count: element index 1
-    return kp[i][1].(int) > kp[j][1].(int)
+    return kp[i][1].(float64) > kp[j][1].(float64)
 }
 
 // extract keywords from pairs
@@ -35,4 +36,19 @@ func (kp keywordPairs) keywords() []string {
 		words[i] = v[0].(string)
 	}
 	return words
+}
+
+type locations []location
+type location map[string]interface{}
+type coords []map[string]float64
+
+func (loc locations) Len() int {
+    return len(loc)
+}
+func (loc locations) Swap(i, j int) {
+    loc[i], loc[j] = loc[j], loc[i]
+}
+func (loc locations) Less(i, j int) bool {
+	// desc by weight
+    return loc[i]["weight"].(float64) > loc[j]["weight"].(float64)
 }

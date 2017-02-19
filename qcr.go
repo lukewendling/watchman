@@ -10,6 +10,7 @@ func ToQCR(evt event) map[string]interface{} {
 	qcrEvent := make(map[string]interface{})
 
     sort.Sort(evt.Keywords)
+    sort.Sort(evt.Locations)
 
 	qcrEvent["keywords"] = evt.Keywords.keywords()
 	qcrEvent["uid"] = evt.ID
@@ -19,6 +20,8 @@ func ToQCR(evt event) map[string]interface{} {
 	qcrEvent["urls"] = evt.URLs
 	qcrEvent["domains"] = evt.Domains
 	qcrEvent["topicMessageCount"] = evt.TopicMessageCount
+    qcrEvent["newsEventIds"] = []string{}
+    qcrEvent["location"] = evt.Locations[0]
 
 	// fmt.Println(qcrEvent)
 	return qcrEvent

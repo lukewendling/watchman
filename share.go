@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/Shopify/sarama"
+	_"fmt"
 )
 
 // ShareEvent is the main interface
