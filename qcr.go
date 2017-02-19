@@ -1,50 +1,36 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-    "sort"
+	"sort"
 )
 
-// Format is QCR structure
-type Format struct {
-    UID string `json:"id"`
-    Label string 
-    // StartDate string
-    // EndDate string
-    // Domains []string
-    Hashtags []string `json:"hashtags"`
-	Keywords [][]interface{} `json:"keywords"`
-    // Urls []string
-    // Photos []string
-    // ImportanceScore int
-    // TopicMessageCount int
-    // CampaignID string
-    // NewsEventsIDs []string
-    // Location []interface{}
+// ToQCR parses event to QCR format
+func ToQCR(evt event) map[string]interface{} {
+	qcrEvent := make(map[string]interface{})
+
+	keywords := GetKeywords(evt.Keywords)
+
+	var strSlice sort.StringSlice = keywords
+
+	qcrEvent["keywords"] = strSlice
+
+	sort.Sort(sort.Reverse(strSlice))
+
+	qcrEvent["uid"] = evt.ID
+	qcrEvent["label"] = Get(evt.Hashtags, 0, "None")
+	qcrEvent["hashtags"] = evt.Hashtags
+	qcrEvent["photos"] = evt.ImageURLs
+	qcrEvent["urls"] = evt.URLs
+	qcrEvent["domains"] = evt.Domains
+	qcrEvent["topicMessageCount"] = evt.TopicMessageCount
+
+	fmt.Println(qcrEvent)
+	return qcrEvent
 }
 
-// ToQCR parses event
-func ToQCR(data []byte) {
-    // var parsed map[string]interface{}
-
-    var formatted Format
-    
-    err := json.Unmarshal(data, &formatted)
-
-    keywords := getKeywords(formatted.Keywords)
-
-    var strSlice sort.StringSlice = keywords
-
-    sort.Sort(sort.Reverse(strSlice)) 
-
-    formatted.Label = Get(formatted.Hashtags, 0, "None")
-    // formatted.Keywords = strSlice
-
-    fmt.Println(err, formatted)
-}
-
-func getKeywords(vs [][]interface{}) []string {
+// GetKeywords takes keywords from keyword->count pairs
+func GetKeywords(vs [][]interface{}) []string {
 	vsm := make([]string, len(vs))
 	for i, v := range vs {
 		vsm[i] = v[0].(string)
