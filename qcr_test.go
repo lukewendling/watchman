@@ -14,8 +14,8 @@ var sverigeCoords = coords{
 
 var osloCoords = coords{
 	{
-		"lat": 59.6749712,
-		"lng": 14.5208584,
+		"lat": 59.911491,
+		"lng": 10.757933,
 	},
 }
 
