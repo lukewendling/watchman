@@ -5,22 +5,13 @@ import (
 	"testing"
 )
 
-var sverigeCoords = coords{
-	{
-		"lat": 59.6749712,
-		"lng": 14.5208584,
-	},
-}
-
-var osloCoords = coords{
-	{
-		"lat": 59.911491,
-		"lng": 10.757933,
-	},
-}
-
 var sverige = location{
-	"coords":   sverigeCoords,
+	"coords": coords{
+		{
+			"lat": 59.6749712,
+			"lng": 14.5208584,
+		},
+	},
 	"geo_type": "point",
 	"type":     "inferred point",
 	"weight":   0.5,
@@ -28,7 +19,12 @@ var sverige = location{
 }
 
 var oslo = location{
-	"coords":   osloCoords,
+	"coords": coords{
+		{
+			"lat": 59.911491,
+			"lng": 10.757933,
+		},
+	},
 	"geo_type": "point",
 	"type":     "inferred point",
 	"weight":   0.8,
@@ -64,8 +60,8 @@ func TestToQCR(t *testing.T) {
 		t.Error("should be 'pakistan' but was ", h)
 	}
 
-    loc := got["location"].(location)
-    if loc["label"] != "Oslo" {
+	loc := got["location"].(location)
+	if loc["label"] != "Oslo" {
 		t.Error("should be 'Oslo' but was ", loc["label"])
 	}
 }
