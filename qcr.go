@@ -1,22 +1,18 @@
 package main
 
 import (
-	"fmt"
+	_"fmt"
 	"sort"
 )
 
-// ToQCR parses event to QCR format
+// ToQCR converts event into QCR format
 func ToQCR(evt event) map[string]interface{} {
 	qcrEvent := make(map[string]interface{})
 
-	keywords := GetKeywords(evt.Keywords)
+    kps := keywordPairs(evt.Keywords)
+    sort.Sort(kps)
 
-	var strSlice sort.StringSlice = keywords
-
-	qcrEvent["keywords"] = strSlice
-
-	sort.Sort(sort.Reverse(strSlice))
-
+	qcrEvent["keywords"] = GetKeywords(kps)
 	qcrEvent["uid"] = evt.ID
 	qcrEvent["label"] = Get(evt.Hashtags, 0, "None")
 	qcrEvent["hashtags"] = evt.Hashtags
@@ -25,12 +21,12 @@ func ToQCR(evt event) map[string]interface{} {
 	qcrEvent["domains"] = evt.Domains
 	qcrEvent["topicMessageCount"] = evt.TopicMessageCount
 
-	fmt.Println(qcrEvent)
+	// fmt.Println(qcrEvent)
 	return qcrEvent
 }
 
-// GetKeywords takes keywords from keyword->count pairs
-func GetKeywords(vs [][]interface{}) []string {
+// GetKeywords takes just the keywords from the pairs
+func GetKeywords(vs keywordPairs) []string {
 	vsm := make([]string, len(vs))
 	for i, v := range vs {
 		vsm[i] = v[0].(string)

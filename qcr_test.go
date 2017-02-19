@@ -1,7 +1,7 @@
 package main
 
 import "testing"
-import "sort"
+import "fmt"
 
 func TestToQcr(t *testing.T) {
 	testEvent := event{
@@ -20,7 +20,8 @@ func TestToQcr(t *testing.T) {
 		t.Error("should be '123' but was ", res["uid"])
 	}
 
-	k := res["keywords"].(sort.StringSlice)[0]
+    fmt.Println(res["keywords"])
+	k := res["keywords"].([]string)[0]
 	if k != "crisis" {
 		t.Error("should be 'crisis' but was ", k)
 	}
