@@ -9,10 +9,9 @@ import (
 func ToQCR(evt event) map[string]interface{} {
 	qcrEvent := make(map[string]interface{})
 
-    kps := keywordPairs(evt.Keywords)
-    sort.Sort(kps)
+    sort.Sort(evt.Keywords)
 
-	qcrEvent["keywords"] = GetKeywords(kps)
+	qcrEvent["keywords"] = evt.Keywords.keywords()
 	qcrEvent["uid"] = evt.ID
 	qcrEvent["label"] = Get(evt.Hashtags, 0, "None")
 	qcrEvent["hashtags"] = evt.Hashtags
@@ -25,14 +24,6 @@ func ToQCR(evt event) map[string]interface{} {
 	return qcrEvent
 }
 
-// GetKeywords takes just the keywords from the pairs
-func GetKeywords(vs keywordPairs) []string {
-	vsm := make([]string, len(vs))
-	for i, v := range vs {
-		vsm[i] = v[0].(string)
-	}
-	return vsm
-}
 
 //keywords = map(iget(0), sorted(rec['keywords'], key=iget(1), reverse=True))
 // l_rec.append({
