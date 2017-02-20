@@ -42,7 +42,7 @@ var testEvent = event{
 	Locations:         locations{sverige, oslo},
 }
 
-func TestToQCR(t *testing.T) {
+func Test_ToQCR(t *testing.T) {
 
 	got := ToQCR(testEvent)
 

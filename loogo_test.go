@@ -2,7 +2,7 @@ package main
 
 import "testing"
 
-func TestBetween(t *testing.T) {
+func Test_Between(t *testing.T) {
 	type args struct {
 		field string
 		lower string
@@ -26,7 +26,7 @@ func TestBetween(t *testing.T) {
 	}
 }
 
-func TestEq(t *testing.T) {
+func Test_Eq(t *testing.T) {
 	type args struct {
 		field string
 		val   string

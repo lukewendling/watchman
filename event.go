@@ -15,7 +15,7 @@ type event struct {
     Locations locations `json:"location"`
 }
 
-// sortable pairs: [word string, count int]
+// pairs: [word string, count int]
 type keywordPairs [][]interface{}
 
 func (kp keywordPairs) Len() int {
