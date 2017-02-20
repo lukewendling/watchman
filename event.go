@@ -13,6 +13,8 @@ type event struct {
 	Domains           []string     `json:"domains"`
 	TopicMessageCount int          `json:"topic_message_count"`
 	Locations         locations    `json:"location"`
+	StartTimeMs       int64        `json:"start_time_ms"`
+	EndTimeMs         int64        `json:"end_time_ms"`
 }
 
 // pairs: [word string, count int]

@@ -40,6 +40,8 @@ var testEvent = event{
 	ImageURLs:         []string{"https://pbs.twimg.com/media/C4xo5cEWEAAksFH.jpg:large", "https://pbs.twimg.com/media/C4zMvyLUYAAfeZT.jpg:large"},
 	TopicMessageCount: 133,
 	Locations:         locations{sverige, oslo},
+	StartTimeMs:       1487262437000,
+	EndTimeMs:         1487262736999,
 }
 
 func Test_ToQCR_happy_path(t *testing.T) {
@@ -60,10 +62,15 @@ func Test_ToQCR_happy_path(t *testing.T) {
 		t.Error("should be 'pakistan' but was ", h)
 	}
 
+	sd := got["startDate"].(string)
+	if sd != "2017-02-16 16:27:17 +0000 UTC" {
+		t.Error("should not be ", sd)
+	}
+
 	loc := got["location"].(qcrLoc)
 	c := loc["coordinates"].(qcrCoords)
 	if c[0] != 10.757933 {
-		t.Error("should be ", c[0])
+		t.Error("should not be ", c[0])
 	}
 }
 
