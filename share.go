@@ -15,6 +15,11 @@ func ShareEvent(evt *event) {
 		kafkaURL = "172.17.0.1:9092"
 	}
 
+	kafkaTopic := os.Getenv("KAFKA_TOPIC")
+	if kafkaTopic == "" {
+		kafkaTopic = "events"
+	}
+
 	ToQCR(*evt)
 
 	producer, err := sarama.NewSyncProducer([]string{kafkaURL}, nil)
@@ -28,7 +33,7 @@ func ShareEvent(evt *event) {
 		}
 	}()
 
-	msg := &sarama.ProducerMessage{Topic: "events",
+	msg := &sarama.ProducerMessage{Topic: kafkaTopic,
 		Value: sarama.StringEncoder(evt.Name)}
 
 	partition, offset, err := producer.SendMessage(msg)
