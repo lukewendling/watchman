@@ -42,7 +42,7 @@ var testEvent = event{
 	Locations:         locations{sverige, oslo},
 }
 
-func Test_ToQCR(t *testing.T) {
+func Test_ToQCR_happy_path(t *testing.T) {
 
 	got := ToQCR(testEvent)
 
@@ -60,8 +60,35 @@ func Test_ToQCR(t *testing.T) {
 		t.Error("should be 'pakistan' but was ", h)
 	}
 
-	loc := got["location"].(location)
-	if loc["label"] != "Oslo" {
-		t.Error("should be 'Oslo' but was ", loc["label"])
+	loc := got["location"].(qcrLoc)
+	c := loc["coordinates"].(qcrCoords)
+	if c[0] != 10.757933 {
+		t.Error("should be ", c[0])
+	}
+}
+
+func Test_ToQCR_empty_locations(t *testing.T) {
+
+	testEvent.Locations = locations{}
+
+	got := ToQCR(testEvent)
+
+	loc := got["location"].(qcrLoc)
+
+	if len(loc) != 0 {
+		t.Error("should have no location but was ", loc)
+	}
+}
+
+func Test_ToQCR_nil_locations(t *testing.T) {
+
+	testEvent.Locations = nil
+
+	got := ToQCR(testEvent)
+
+	loc := got["location"].(qcrLoc)
+
+	if len(loc) != 0 {
+		t.Error("should have no location but was ", loc)
 	}
 }
