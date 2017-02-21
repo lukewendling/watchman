@@ -42,11 +42,15 @@ var testEvent = event{
 	Locations:         locations{sverige, oslo},
 	StartTimeMs:       1487262437000,
 	EndTimeMs:         1487262736999,
+	CampaignScores: []campaignScore{
+		{"123": 0.95},
+		{"456": 0.5},
+	},
 }
 
 func Test_ToQCR_happy_path(t *testing.T) {
 
-	got := ToQCR(testEvent)
+	got := ToQCR(testEvent)[0]
 
 	if got["uid"] != "123" {
 		t.Error("should be '123' but was ", got["uid"])
@@ -78,7 +82,7 @@ func Test_ToQCR_empty_locations(t *testing.T) {
 
 	testEvent.Locations = locations{}
 
-	got := ToQCR(testEvent)
+	got := ToQCR(testEvent)[0]
 
 	loc := got["location"].(qcrLoc)
 
@@ -91,7 +95,7 @@ func Test_ToQCR_nil_locations(t *testing.T) {
 
 	testEvent.Locations = nil
 
-	got := ToQCR(testEvent)
+	got := ToQCR(testEvent)[0]
 
 	loc := got["location"].(qcrLoc)
 

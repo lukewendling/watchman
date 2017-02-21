@@ -22,7 +22,7 @@ func ShareEvent(evt *event) {
 		kafkaTopic = "events"
 	}
 
-	qcrEvt := ToQCR(*evt)
+	campaignEvents := ToQCR(*evt)
 
 	config := sarama.NewConfig()
 	config.Producer.RequiredAcks = sarama.WaitForAll
@@ -42,17 +42,19 @@ func ShareEvent(evt *event) {
 		}
 	}()
 
-	msg := &sarama.ProducerMessage{
-		Topic: kafkaTopic,
-		Value: sarama.StringEncoder(stringifyEvent(qcrEvt)),
-	}
+	for _, evt := range campaignEvents {
+		msg := &sarama.ProducerMessage{
+			Topic: kafkaTopic,
+			Value: sarama.StringEncoder(stringifyEvent(evt)),
+		}
 
-	partition, offset, err := producer.SendMessage(msg)
+		partition, offset, err := producer.SendMessage(msg)
 
-	if err != nil {
-		log.Printf("FAILED to send message: %s\n", err)
-	} else {
-		log.Printf("> message sent to partition %d at offset %d\n", partition, offset)
+		if err != nil {
+			log.Printf("FAILED to send message: %s\n", err)
+		} else {
+			log.Printf("> message sent to partition %d at offset %d\n", partition, offset)
+		}
 	}
 }
 

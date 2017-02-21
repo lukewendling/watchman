@@ -4,20 +4,25 @@ type events []event
 
 // watchman event struct
 type event struct {
-	ID                string       `json:"id"`
-	Name              string       `json:"name"`
-	Keywords          keywordPairs `json:"keywords"`
-	Hashtags          []string     `json:"hashtags"`
-	URLs              []string     `json:"urls"`
-	ImageURLs         []string     `json:"image_urls"`
-	Domains           []string     `json:"domains"`
-	TopicMessageCount int          `json:"topic_message_count"`
-	Locations         locations    `json:"location"`
-	StartTimeMs       int64        `json:"start_time_ms"`
-	EndTimeMs         int64        `json:"end_time_ms"`
+	ID                string         `json:"id"`
+	Name              string         `json:"name"`
+	Keywords          keywordPairs   `json:"keywords"`
+	Hashtags          []string       `json:"hashtags"`
+	URLs              []string       `json:"urls"`
+	ImageURLs         []string       `json:"image_urls"`
+	Domains           []string       `json:"domains"`
+	TopicMessageCount int            `json:"topic_message_count"`
+	Locations         locations      `json:"location"`
+	StartTimeMs       int64          `json:"start_time_ms"`
+	EndTimeMs         int64          `json:"end_time_ms"`
+	CampaignScores    campaignScores `json:"campaigns"`
 }
 
-// pairs: [word string, count int]
+// ex: [{'345678': 0.958139534883721}, {'123456': 0.958139534883721}]
+type campaignScores []campaignScore
+type campaignScore map[string]float64
+
+// list of mixed-type pairs: [(crisis, 20.0)]
 type keywordPairs [][]interface{}
 
 func (kp keywordPairs) Len() int {

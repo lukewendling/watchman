@@ -6,11 +6,11 @@ import (
 	"time"
 )
 
-// ToQCR converts event into QCR format
-func ToQCR(evt event) map[string]interface{} {
+// ToQCR converts event into multiple QCR events, 1 per campaign
+func ToQCR(evt event) []map[string]interface{} {
 	fmt.Println("converting event ", evt.ID)
 
-	qcrEvent := make(map[string]interface{})
+	qcrEvent := map[string]interface{}{}
 
 	sort.Sort(evt.Keywords)
 	sort.Sort(evt.Locations)
@@ -28,7 +28,24 @@ func ToQCR(evt event) map[string]interface{} {
 	qcrEvent["startDate"] = millisToTime(evt.StartTimeMs)
 	qcrEvent["endDate"] = millisToTime(evt.EndTimeMs)
 
-	return qcrEvent
+	campaignEvents := []map[string]interface{}{}
+
+	for _, c := range evt.CampaignScores {
+		copyEvent := map[string]interface{}{}
+		// make a copy
+		for k, v := range qcrEvent {
+			copyEvent[k] = v
+		}
+		for k, v := range c {
+			copyEvent["campaignId"] = k
+			copyEvent["importanceScore"] = v
+		}
+		if copyEvent["importanceScore"].(float64) >= 0.7 {
+			campaignEvents = append(campaignEvents, copyEvent)
+		}
+	}
+
+	return campaignEvents
 }
 
 func millisToTime(millis int64) string {

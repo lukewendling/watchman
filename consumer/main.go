@@ -6,6 +6,7 @@ import (
 	"os/signal"
 
 	"github.com/Shopify/sarama"
+	"time"
 )
 
 func main() {
@@ -58,7 +59,7 @@ func main() {
 				fmt.Println(err)
 			case msg := <-consumer.Messages():
 				msgCount++
-				fmt.Println("Received messages", string(msg.Key), string(msg.Value))
+				fmt.Println("Received messages", time.Now(), string(msg.Key), string(msg.Value))
 			case <-signals:
 				fmt.Println("Interrupt is detected")
 				doneCh <- struct{}{}
