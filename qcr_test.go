@@ -43,38 +43,50 @@ var testEvent = event{
 	StartTimeMs:       1487262437000,
 	EndTimeMs:         1487262736999,
 	CampaignScores: []campaignScore{
-		{"123": 0.95},
-		{"456": 0.5},
+		{"000": 0.95},
+		{"111": 0.5},
+		{"222": 0.7},
 	},
 }
 
 func Test_ToQCR_happy_path(t *testing.T) {
 
-	got := ToQCR(testEvent)[0]
+	qcrEvents := ToQCR(testEvent)
 
-	if got["uid"] != "123" {
-		t.Error("should be '123' but was ", got["uid"])
+	if len(qcrEvents) != 2 {
+		t.Error("should be 2 but was ", len(qcrEvents))
 	}
 
-	k := got["keywords"].([]string)[0]
-	if k != "crisis" {
-		t.Error("should be 'crisis' but was ", k)
+	evt := qcrEvents[0]
+
+	if evt["uid"] != "123" {
+		t.Error("should be '123' but was ", evt["uid"])
 	}
 
-	h := got["hashtags"].([]string)[0]
-	if h != "pakistan" {
-		t.Error("should be 'pakistan' but was ", h)
+	kw := evt["keywords"].([]string)[0]
+	if kw != "crisis" {
+		t.Error("should be 'crisis' but was ", kw)
 	}
 
-	sd := got["startDate"].(string)
+	ht := evt["hashtags"].([]string)[0]
+	if ht != "pakistan" {
+		t.Error("should be 'pakistan' but was ", ht)
+	}
+
+	sd := evt["startDate"].(string)
 	if sd != "2017-02-16 16:27:17 +0000 UTC" {
 		t.Error("should not be ", sd)
 	}
 
-	loc := got["location"].(qcrLoc)
-	c := loc["coordinates"].(qcrCoords)
-	if c[0] != 10.757933 {
-		t.Error("should not be ", c[0])
+	cid := evt["campaignId"].(string)
+	if cid != "000" {
+		t.Error("should not be ", cid)
+	}
+
+	loc := evt["location"].(qcrLoc)
+	co := loc["coordinates"].(qcrCoords)
+	if co[0] != 10.757933 {
+		t.Error("should not be ", co[0])
 	}
 }
 
@@ -82,9 +94,9 @@ func Test_ToQCR_empty_locations(t *testing.T) {
 
 	testEvent.Locations = locations{}
 
-	got := ToQCR(testEvent)[0]
+	evt := ToQCR(testEvent)[0]
 
-	loc := got["location"].(qcrLoc)
+	loc := evt["location"].(qcrLoc)
 
 	if len(loc) != 0 {
 		t.Error("should have no location but was ", loc)
@@ -95,9 +107,9 @@ func Test_ToQCR_nil_locations(t *testing.T) {
 
 	testEvent.Locations = nil
 
-	got := ToQCR(testEvent)[0]
+	evt := ToQCR(testEvent)[0]
 
-	loc := got["location"].(qcrLoc)
+	loc := evt["location"].(qcrLoc)
 
 	if len(loc) != 0 {
 		t.Error("should have no location but was ", loc)
