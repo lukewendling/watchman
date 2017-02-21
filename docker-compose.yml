@@ -1,0 +1,11 @@
+version: "2.1"
+services:
+  kafka:
+    hostname: kafka 
+    image: sotera/kafka-local
+    ports:
+      - "8080:8080"
+      - "9092:9092"
+      - "2181:2181"
+    volumes:
+      - .:/work

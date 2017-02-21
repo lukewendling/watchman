@@ -1,19 +1,20 @@
 ## Build
 
 ```
-go build github.com/lukewendling/watchman
+make build
 ```
 
 ## Run tests
 ```
-go test
+make test
 ```
 
-## Publish to local kafka server
+## Produce/Consume to local kafka server
 
 ```
 # get start_time, end_time params from local db
-(1)> ./docker-kafka.sh
-(2)> docker exec -it kafka /work/watchman \
+docker-compose up -d
+(1)> docker-compose exec kafka /work/consumer/consumer
+(2)> docker-compose exec kafka /work/watchman \
 -start-time-ms=2017-02-17T02:07:11.495Z -end-time-ms=2017-02-17T02:07:11.497Z
 ```
