@@ -6,29 +6,29 @@ import (
 )
 
 var sverige = location{
-	"coords": coords{
+	Coords: coords{
 		{
 			"lat": 59.6749712,
 			"lng": 14.5208584,
 		},
 	},
-	"geo_type": "point",
-	"type":     "inferred point",
-	"weight":   0.5,
-	"label":    "Sverige",
+	GeoType: "point",
+	Type:    "inferred point",
+	Weight:  0.5,
+	Label:   "Sverige",
 }
 
 var oslo = location{
-	"coords": coords{
+	Coords: coords{
 		{
 			"lat": 59.911491,
 			"lng": 10.757933,
 		},
 	},
-	"geo_type": "point",
-	"type":     "inferred point",
-	"weight":   0.8,
-	"label":    "Oslo",
+	GeoType: "point",
+	Type:    "inferred point",
+	Weight:  0.8,
+	Label:   "Oslo",
 }
 
 var testEvent = event{

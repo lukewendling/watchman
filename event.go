@@ -40,8 +40,14 @@ func (kp keywordPairs) keywords() []string {
 	return words
 }
 
+type location struct {
+	GeoType string  `json:"geo_type"`
+	Coords  coords  `json:"coords"`
+	Type    string  `json:"type"`
+	Weight  float64 `json:"weight"`
+	Label   string  `json:"label"`
+}
 type locations []location
-type location map[string]interface{}
 type coords []map[string]float64
 
 func (loc locations) Len() int {
@@ -52,5 +58,5 @@ func (loc locations) Swap(i, j int) {
 }
 func (loc locations) Less(i, j int) bool {
 	// desc by weight
-	return loc[i]["weight"].(float64) > loc[j]["weight"].(float64)
+	return loc[i].Weight > loc[j].Weight
 }

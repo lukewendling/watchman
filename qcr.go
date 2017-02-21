@@ -1,13 +1,15 @@
 package main
 
 import (
-	_ "fmt"
+	"fmt"
 	"sort"
 	"time"
 )
 
 // ToQCR converts event into QCR format
 func ToQCR(evt event) map[string]interface{} {
+	fmt.Println("converting event ", evt.ID)
+
 	qcrEvent := make(map[string]interface{})
 
 	sort.Sort(evt.Keywords)
@@ -26,7 +28,6 @@ func ToQCR(evt event) map[string]interface{} {
 	qcrEvent["startDate"] = millisToTime(evt.StartTimeMs)
 	qcrEvent["endDate"] = millisToTime(evt.EndTimeMs)
 
-	// fmt.Println(qcrEvent)
 	return qcrEvent
 }
 
@@ -39,8 +40,8 @@ func toLocation(locs locations) qcrLoc {
 		return qcrLoc{}
 	}
 	loc := locs[0]
-	c := loc["coords"].(coords)[0]
-	latLng := qcrCoords{c["lng"], c["lat"]}
+	c := loc.Coords
+	latLng := qcrCoords{c[0]["lng"], c[0]["lat"]}
 	return qcrLoc{
 		"type":        "Point",
 		"coordinates": latLng,

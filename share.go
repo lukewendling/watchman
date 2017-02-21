@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 	"os"
 
@@ -21,9 +22,16 @@ func ShareEvent(evt *event) {
 		kafkaTopic = "events"
 	}
 
-	ToQCR(*evt)
+	qcrEvt := ToQCR(*evt)
 
-	producer, err := sarama.NewSyncProducer([]string{kafkaURL}, nil)
+	config := sarama.NewConfig()
+	config.Producer.RequiredAcks = sarama.WaitForAll
+	config.Producer.Retry.Max = 5
+	config.Producer.Return.Successes = true
+
+	brokers := []string{kafkaURL}
+	producer, err := sarama.NewSyncProducer(brokers, config)
+
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -34,8 +42,10 @@ func ShareEvent(evt *event) {
 		}
 	}()
 
-	msg := &sarama.ProducerMessage{Topic: kafkaTopic,
-		Value: sarama.StringEncoder(evt.Name)}
+	msg := &sarama.ProducerMessage{
+		Topic: kafkaTopic,
+		Value: sarama.StringEncoder(stringifyEvent(qcrEvt)),
+	}
 
 	partition, offset, err := producer.SendMessage(msg)
 
@@ -44,4 +54,12 @@ func ShareEvent(evt *event) {
 	} else {
 		log.Printf("> message sent to partition %d at offset %d\n", partition, offset)
 	}
+}
+
+func stringifyEvent(evt map[string]interface{}) string {
+	b, err := json.Marshal(evt)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	return string(b)
 }
