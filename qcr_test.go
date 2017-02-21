@@ -49,8 +49,7 @@ var testEvent = event{
 	},
 }
 
-func Test_ToQCR_happy_path(t *testing.T) {
-
+func Test_ToQCR_campaigns(t *testing.T) {
 	qcrEvents := ToQCR(testEvent)
 
 	if len(qcrEvents) != 2 {
@@ -58,6 +57,16 @@ func Test_ToQCR_happy_path(t *testing.T) {
 	}
 
 	evt := qcrEvents[0]
+
+	cid := evt["campaignId"].(string)
+	if cid != "000" {
+		t.Error("should not be ", cid)
+	}
+}
+
+func Test_ToQCR_happy_path(t *testing.T) {
+
+	evt := ToQCR(testEvent)[0]
 
 	if evt["uid"] != "123" {
 		t.Error("should be '123' but was ", evt["uid"])
@@ -76,11 +85,6 @@ func Test_ToQCR_happy_path(t *testing.T) {
 	sd := evt["startDate"].(string)
 	if sd != "2017-02-16 16:27:17 +0000 UTC" {
 		t.Error("should not be ", sd)
-	}
-
-	cid := evt["campaignId"].(string)
-	if cid != "000" {
-		t.Error("should not be ", cid)
 	}
 
 	loc := evt["location"].(qcrLoc)

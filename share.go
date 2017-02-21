@@ -10,8 +10,8 @@ import (
 	"github.com/Shopify/sarama"
 )
 
-// ShareEvent is the main interface
-func ShareEvent(evt *event) {
+// ShareEvents publishes events to QCR msg queue
+func ShareEvents(evts events) {
 	kafkaURL := os.Getenv("KAFKA_URL")
 	if kafkaURL == "" {
 		kafkaURL = "172.17.0.1:9092"
@@ -21,8 +21,6 @@ func ShareEvent(evt *event) {
 	if kafkaTopic == "" {
 		kafkaTopic = "events"
 	}
-
-	campaignEvents := ToQCR(*evt)
 
 	config := sarama.NewConfig()
 	config.Producer.RequiredAcks = sarama.WaitForAll
@@ -42,18 +40,22 @@ func ShareEvent(evt *event) {
 		}
 	}()
 
-	for _, evt := range campaignEvents {
-		msg := &sarama.ProducerMessage{
-			Topic: kafkaTopic,
-			Value: sarama.StringEncoder(stringifyEvent(evt)),
-		}
+	for _, evt := range evts {
+		qcrEvents := ToQCR(evt)
 
-		partition, offset, err := producer.SendMessage(msg)
+		for _, qcrEvt := range qcrEvents {
+			msg := &sarama.ProducerMessage{
+				Topic: kafkaTopic,
+				Value: sarama.StringEncoder(stringifyEvent(qcrEvt)),
+			}
 
-		if err != nil {
-			log.Printf("FAILED to send message: %s\n", err)
-		} else {
-			log.Printf("> message sent to partition %d at offset %d\n", partition, offset)
+			partition, offset, err := producer.SendMessage(msg)
+
+			if err != nil {
+				log.Printf("FAILED to send message: %s\n", err)
+			} else {
+				log.Printf("> message sent to partition %d at offset %d\n", partition, offset)
+			}
 		}
 	}
 }

@@ -30,11 +30,8 @@ func main() {
 
 	myevents := make(events, 0)
 
-	// fmt.Println(res.Body)
 	json.NewDecoder(res.Body).Decode(&myevents)
 	fmt.Println("events:", len(myevents))
 
-	for _, evt := range myevents {
-		ShareEvent(&evt)
-	}
+	ShareEvents(myevents)
 }

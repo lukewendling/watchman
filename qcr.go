@@ -28,7 +28,12 @@ func ToQCR(evt event) []map[string]interface{} {
 	qcrEvent["startDate"] = millisToTime(evt.StartTimeMs)
 	qcrEvent["endDate"] = millisToTime(evt.EndTimeMs)
 
-	campaignEvents := []map[string]interface{}{}
+	qcrEvents := []map[string]interface{}{}
+
+	if len(evt.CampaignScores) == 0 {
+		fmt.Println("no campaigns found. return empty set.")
+		return qcrEvents
+	}
 
 	for _, c := range evt.CampaignScores {
 		copyEvent := map[string]interface{}{}
@@ -41,11 +46,11 @@ func ToQCR(evt event) []map[string]interface{} {
 			copyEvent["importanceScore"] = v
 		}
 		if copyEvent["importanceScore"].(float64) >= 0.7 {
-			campaignEvents = append(campaignEvents, copyEvent)
+			qcrEvents = append(qcrEvents, copyEvent)
 		}
 	}
 
-	return campaignEvents
+	return qcrEvents
 }
 
 func millisToTime(millis int64) string {
