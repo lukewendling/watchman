@@ -49,8 +49,8 @@ var testEvent = event{
 	},
 }
 
-func Test_ToQCR_campaigns(t *testing.T) {
-	qcrEvents := ToQCR(testEvent)
+func Test_convert_campaigns(t *testing.T) {
+	qcrEvents := convert(testEvent)
 
 	if len(qcrEvents) != 2 {
 		t.Error("should be 2 but was ", len(qcrEvents))
@@ -64,9 +64,9 @@ func Test_ToQCR_campaigns(t *testing.T) {
 	}
 }
 
-func Test_ToQCR_happy_path(t *testing.T) {
+func Test_convert_happy_path(t *testing.T) {
 
-	evt := ToQCR(testEvent)[0]
+	evt := convert(testEvent)[0]
 
 	if evt["uid"] != "123" {
 		t.Error("should be '123' but was ", evt["uid"])
@@ -94,11 +94,11 @@ func Test_ToQCR_happy_path(t *testing.T) {
 	}
 }
 
-func Test_ToQCR_empty_locations(t *testing.T) {
+func Test_convert_empty_locations(t *testing.T) {
 
 	testEvent.Locations = locations{}
 
-	evt := ToQCR(testEvent)[0]
+	evt := convert(testEvent)[0]
 
 	loc := evt["location"].(qcrLoc)
 
@@ -107,11 +107,11 @@ func Test_ToQCR_empty_locations(t *testing.T) {
 	}
 }
 
-func Test_ToQCR_nil_locations(t *testing.T) {
+func Test_convert_nil_locations(t *testing.T) {
 
 	testEvent.Locations = nil
 
-	evt := ToQCR(testEvent)[0]
+	evt := convert(testEvent)[0]
 
 	loc := evt["location"].(qcrLoc)
 

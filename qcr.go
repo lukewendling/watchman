@@ -44,7 +44,7 @@ func (q *QCR) Receive(evts events) {
 	}()
 
 	for _, evt := range evts {
-		qcrEvents := ToQCR(evt)
+		qcrEvents := convert(evt)
 
 		for _, qcrEvt := range qcrEvents {
 			msg := &sarama.ProducerMessage{
@@ -64,7 +64,7 @@ func (q *QCR) Receive(evts events) {
 }
 
 // ToQCR converts event into multiple QCR events, 1 per campaign
-func ToQCR(evt event) []map[string]interface{} {
+func convert(evt event) []map[string]interface{} {
 	fmt.Println("converting event ", evt.ID)
 
 	qcrEvent := map[string]interface{}{}
