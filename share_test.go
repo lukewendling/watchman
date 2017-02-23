@@ -7,7 +7,7 @@ import (
 
 func TestShareEvents(t *testing.T) {
 	type args struct {
-		evts []event
+		evts events
 	}
 	tests := []struct {
 		name string
@@ -20,7 +20,7 @@ func TestShareEvents(t *testing.T) {
 	}
 }
 
-func Test_stringifyEvent(t *testing.T) {
+func Test_stringifyGenericMap(t *testing.T) {
 	type args struct {
 		evt map[string]interface{}
 	}
@@ -32,8 +32,8 @@ func Test_stringifyEvent(t *testing.T) {
 	// TODO: Add test cases.
 	}
 	for _, tt := range tests {
-		if got := stringifyEvent(tt.args.evt); got != tt.want {
-			t.Errorf("%q. stringifyEvent() = %v, want %v", tt.name, got, tt.want)
+		if got := stringifyGenericMap(tt.args.evt); got != tt.want {
+			t.Errorf("%q. stringifyGenericMap() = %v, want %v", tt.name, got, tt.want)
 		}
 	}
 }

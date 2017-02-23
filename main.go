@@ -28,10 +28,10 @@ func main() {
 		log.Fatal(fmt.Println(err))
 	}
 
-	myevents := make(events, 0)
+	watchmanEvents := make(events, 0)
 
-	json.NewDecoder(res.Body).Decode(&myevents)
-	fmt.Println("events:", len(myevents))
+	json.NewDecoder(res.Body).Decode(&watchmanEvents)
+	fmt.Println("events:", len(watchmanEvents))
 
-	ShareEvents(myevents)
+	ShareEvents(watchmanEvents)
 }
