@@ -63,7 +63,7 @@ func (q *QCR) Receive(evts events) {
 	}
 }
 
-// ToQCR converts event into multiple QCR events, 1 per campaign
+// convert event into multiple QCR events, 1 per campaign
 func convert(evt event) []map[string]interface{} {
 	fmt.Println("converting event ", evt.ID)
 

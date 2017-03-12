@@ -1,12 +1,13 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
-	"net/http"
 	"os"
+	"strings"
+
+	"github.com/Sotera/go_watchman/loogo"
 )
 
 func main() {
@@ -19,18 +20,28 @@ func main() {
 	if apiRoot == "" {
 		apiRoot = "http://172.17.0.1:3000/api"
 	}
+	apiRoot = strings.TrimRight(apiRoot, "/")
 
-	qs := Between("created", *startTime, *endTime)
-
-	res, err := http.Get(apiRoot + "/events" + qs)
-
-	if err != nil {
-		log.Fatal(fmt.Println(err))
+	parser := &loogo.HTTPRequestParser{Client: &loogo.HTTPClient{}}
+	p1 := loogo.QueryParam{
+		QueryType: "between",
+		Field:     "created",
+		Values:    []string{*startTime, *endTime},
+	}
+	params := loogo.QueryParams{
+		p1,
 	}
 
 	watchmanEvents := make(events, 0)
 
-	json.NewDecoder(res.Body).Decode(&watchmanEvents)
+	err := parser.NewRequest(
+		loogo.NewRequestParams{URL: apiRoot + "/events", Params: params},
+		watchmanEvents)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	fmt.Println("events:", len(watchmanEvents))
 
 	ShareEvents(watchmanEvents)

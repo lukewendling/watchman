@@ -38,7 +38,7 @@ func (kp keywordPairs) Less(i, j int) bool {
 
 // extract keywords from pairs
 func (kp keywordPairs) keywords() []string {
-	words := make([]string, len(kp))
+	words := make([]string, 0)
 	for i, v := range kp {
 		words[i] = v[0].(string)
 	}
@@ -46,7 +46,7 @@ func (kp keywordPairs) keywords() []string {
 }
 
 type location struct {
-	GeoType string  `json:"geo_type"`
+	GeoType string  `json:"geo_type" form:"geoType" validation:"required"`
 	Coords  coords  `json:"coords"`
 	Type    string  `json:"type"`
 	Weight  float64 `json:"weight"`
